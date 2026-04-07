@@ -1,6 +1,15 @@
 # Docker & local dev
 docker-compose.yml
 
+# Screenshots
+screenshots/
+
+# Node / tooling
+node_modules/
+package.json
+package-lock.json
+take-screenshots.js
+
 # OS
 .DS_Store
 Thumbs.db
