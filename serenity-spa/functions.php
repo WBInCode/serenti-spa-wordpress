@@ -25,7 +25,10 @@ function serenity_setup() {
 
     register_nav_menus( array(
         'primary' => __( 'Menu główne', 'serenity-spa' ),
+        'footer'  => __( 'Menu stopki', 'serenity-spa' ),
     ) );
+
+    add_theme_support( 'automatic-feed-links' );
 }
 add_action( 'after_setup_theme', 'serenity_setup' );
 
@@ -102,3 +105,104 @@ function serenity_schema_jsonld() {
     <?php
 }
 add_action( 'wp_head', 'serenity_schema_jsonld' );
+
+/**
+ * Auto-create required pages on theme activation
+ */
+function serenity_create_pages() {
+    $pages = array(
+        'kontakt' => array(
+            'title'    => 'Kontakt',
+            'template' => 'page-kontakt.php',
+        ),
+        'o-nas' => array(
+            'title'    => 'O nas',
+            'template' => 'page-o-nas.php',
+        ),
+        'uslugi' => array(
+            'title'    => 'Zabiegi',
+            'template' => 'page-uslugi.php',
+        ),
+        'polityka-prywatnosci' => array(
+            'title'    => 'Polityka prywatności',
+            'template' => 'page-polityka-prywatnosci.php',
+        ),
+        'podziekowanie' => array(
+            'title'    => 'Dziękujemy',
+            'template' => 'page-podziekowanie.php',
+        ),
+    );
+
+    foreach ( $pages as $slug => $page_data ) {
+        $existing = get_page_by_path( $slug );
+        if ( ! $existing ) {
+            $page_id = wp_insert_post( array(
+                'post_title'   => $page_data['title'],
+                'post_name'    => $slug,
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+                'post_content' => '',
+            ) );
+            if ( $page_id && ! is_wp_error( $page_id ) ) {
+                update_post_meta( $page_id, '_wp_page_template', $page_data['template'] );
+            }
+        }
+    }
+
+    // Set privacy policy page
+    $privacy = get_page_by_path( 'polityka-prywatnosci' );
+    if ( $privacy ) {
+        update_option( 'wp_page_for_privacy_policy', $privacy->ID );
+    }
+}
+add_action( 'after_switch_theme', 'serenity_create_pages' );
+
+/**
+ * Breadcrumb Schema JSON-LD
+ */
+function serenity_breadcrumb_schema() {
+    if ( is_front_page() ) return;
+
+    $items = array();
+    $items[] = array(
+        '@type'    => 'ListItem',
+        'position' => 1,
+        'name'     => 'Strona główna',
+        'item'     => home_url( '/' ),
+    );
+
+    if ( is_page() ) {
+        $items[] = array(
+            '@type'    => 'ListItem',
+            'position' => 2,
+            'name'     => get_the_title(),
+            'item'     => get_permalink(),
+        );
+    }
+
+    if ( count( $items ) > 1 ) {
+        echo '<script type="application/ld+json">' . wp_json_encode( array(
+            '@context'        => 'https://schema.org',
+            '@type'           => 'BreadcrumbList',
+            'itemListElement' => $items,
+        ), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+    }
+}
+add_action( 'wp_head', 'serenity_breadcrumb_schema' );
+
+/**
+ * Custom body class for subpages
+ */
+function serenity_body_classes( $classes ) {
+    if ( is_page_template( 'page-kontakt.php' ) ) {
+        $classes[] = 'page-contact';
+    }
+    if ( is_404() ) {
+        $classes[] = 'page-404';
+    }
+    if ( ! is_front_page() ) {
+        $classes[] = 'is-subpage';
+    }
+    return $classes;
+}
+add_filter( 'body_class', 'serenity_body_classes' );

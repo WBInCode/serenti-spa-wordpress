@@ -87,26 +87,35 @@
 
   /* ---- Form basic inline validation ---- */
   var form = document.getElementById('contactForm');
-  if (form) {
-    form.addEventListener('submit', function(e) {
+  var formPage = document.getElementById('contactFormPage');
+
+  function handleFormSubmit(f, redirectUrl) {
+    f.addEventListener('submit', function(e) {
       e.preventDefault();
       var valid = true;
-      form.querySelectorAll('[required]').forEach(function(input) {
+      f.querySelectorAll('[required]').forEach(function(input) {
         if (!input.value.trim()) {
           input.style.borderColor = '#e85d5d';
           valid = false;
         } else {
-          input.style.borderColor = 'rgba(255,255,255,0.12)';
+          input.style.borderColor = '';
         }
       });
       if (valid) {
-        var btn = form.querySelector('button[type="submit"]');
-        btn.innerHTML = '✓ Wysłano! Oddzwonimy wkrótce';
-        btn.style.background = 'rgba(143, 170, 132, 0.3)';
-        btn.style.borderColor = 'var(--accent-sage)';
-        btn.disabled = true;
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+        } else {
+          var btn = f.querySelector('button[type="submit"]');
+          btn.innerHTML = '✓ Wysłano! Oddzwonimy wkrótce';
+          btn.style.background = 'rgba(143, 170, 132, 0.3)';
+          btn.style.borderColor = 'var(--accent-sage)';
+          btn.disabled = true;
+        }
       }
     });
   }
+
+  if (form) handleFormSubmit(form, null);
+  if (formPage) handleFormSubmit(formPage, '/podziekowanie/');
 
 })();

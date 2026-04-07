@@ -26,11 +26,10 @@
       <div class="footer__col">
         <div class="footer__col-title">Informacje</div>
         <ul>
-          <li><a href="#">O nas</a></li>
-          <li><a href="#">Cennik</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Karty podarunkowe</a></li>
-          <li><a href="#">FAQ</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/o-nas/' ) ); ?>">O nas</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/uslugi/' ) ); ?>">Zabiegi</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>">Kontakt</a></li>
+          <li><a href="<?php echo esc_url( get_privacy_policy_url() ); ?>">Polityka prywatności</a></li>
         </ul>
       </div>
       <div class="footer__col">
@@ -38,14 +37,14 @@
         <ul>
           <li><a href="tel:+48123456789">+48 123 456 789</a></li>
           <li><a href="mailto:kontakt@serenityspa.pl">kontakt@serenityspa.pl</a></li>
-          <li><a href="#">ul. Spokojna 12<br>00-001 Warszawa</a></li>
-          <li><a href="#">Pn-Nd: 9:00 – 21:00</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>">ul. Spokojna 12<br>00-001 Warszawa</a></li>
+          <li>Pn-Nd: 9:00 – 21:00</li>
         </ul>
       </div>
     </div>
     <div class="footer__bottom">
       <span>&copy; <?php echo esc_html( date( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. Wszelkie prawa zastrzeżone.</span>
-      <span><a href="<?php echo esc_url( get_privacy_policy_url() ); ?>">Polityka prywatności</a> · <a href="#">Regulamin</a></span>
+      <span><a href="<?php echo esc_url( get_privacy_policy_url() ); ?>">Polityka prywatności</a> · <a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>">Kontakt</a></span>
     </div>
   </div>
 </footer>
