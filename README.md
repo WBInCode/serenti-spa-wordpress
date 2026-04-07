@@ -1,0 +1,1 @@
+# serenti-spa-wordpress
